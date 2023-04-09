@@ -1,3 +1,5 @@
+* `json.Marshaler` and `json.Unmarshaler`增加整数和枚举转换的选项
+* 参数`-intJson`表示使用整数进行json转换
 # Enumer [![GoDoc](https://godoc.org/github.com/alvaroloes/enumer?status.svg)](https://godoc.org/github.com/alvaroloes/enumer) [![Go Report Card](https://goreportcard.com/badge/github.com/alvaroloes/enumer)](https://goreportcard.com/report/github.com/alvaroloes/enumer) [![cover.run go](https://cover.run/go/github.com/alvaroloes/enumer.svg?tag=golang-1.10)](https://cover.run/go/github.com/alvaroloes/enumer?tag=golang-1.10)
 Enumer is a tool to generate Go code that adds useful methods to Go enums (constants with a specific type).
 It started as a fork of [Rob Pike’s Stringer tool](https://godoc.org/golang.org/x/tools/cmd/stringer).

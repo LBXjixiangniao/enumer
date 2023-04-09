@@ -46,6 +46,7 @@ var (
 	typeNames       = flag.String("type", "", "comma-separated list of type names; must be set")
 	sql             = flag.Bool("sql", false, "if true, the Scanner and Valuer interface will be implemented.")
 	json            = flag.Bool("json", false, "if true, json marshaling methods will be generated. Default: false")
+	intJson         = flag.Bool("intJson", false, "if true, json marshaling methods will be generated. Default: false")
 	yaml            = flag.Bool("yaml", false, "if true, yaml marshaling methods will be generated. Default: false")
 	text            = flag.Bool("text", false, "if true, text marshaling methods will be generated. Default: false")
 	output          = flag.String("output", "", "output file name; default srcdir/<type>_enumer.go")
@@ -116,6 +117,9 @@ func main() {
 	}
 	if *json {
 		g.Printf("\t\"encoding/json\"\n")
+		if *intJson {
+			g.Printf("\t\"strconv\"\n")
+		}
 	}
 	g.Printf(")\n")
 
@@ -390,7 +394,7 @@ func (g *Generator) generate(typeName string, includeJSON, includeYAML, includeS
 
 	g.buildBasicExtras(runs, typeName, runsThreshold)
 	if includeJSON {
-		g.buildJSONMethods(runs, typeName, runsThreshold)
+		g.buildJSONMethods(runs, typeName, runsThreshold, *intJson)
 	}
 	if includeText {
 		g.buildTextMethods(runs, typeName, runsThreshold)

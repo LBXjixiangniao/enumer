@@ -107,11 +107,40 @@ func (i *%[1]s) UnmarshalJSON(data []byte) error {
 }
 `
 
-func (g *Generator) buildJSONMethods(runs [][]Value, typeName string, runsThreshold int) {
-	g.Printf(jsonMethods, typeName)
+const intJsonMethods = `
+// MarshalJSON implements the json.Marshaler interface for %[1]s
+func (i %[1]s) MarshalJSON() ([]byte, error) {
+	return []byte(strconv.Itoa(int(i))),nil
+}
+
+// UnmarshalJSON implements the json.Unmarshaler interface for ObjectType
+func (i *%[1]s) UnmarshalJSON(data []byte) error {
+	var value int
+	if err := json.Unmarshal(data, &value); err != nil {
+		return fmt.Errorf("%[1]s should be a string, got %s", data)
+	}
+
+	resultType := %[1]s(value)
+	for _, objectType := range %[1]sValues() {
+		if objectType == resultType {
+			*i = resultType
+			return nil
+		}
+	}
+	return errors.New("不存在与" + strconv.Itoa(value) + "对应的%[1]s")
+}
+`
+
+func (g *Generator) buildJSONMethods(runs [][]Value, typeName string, runsThreshold int, intJson bool) {
+	if intJson {
+		g.Printf(intJsonMethods, typeName)
+	} else {
+		g.Printf(jsonMethods, typeName)
+	}
 }
 
 // Arguments to format are:
+//
 //	[1]: type name
 const textMethods = `
 // MarshalText implements the encoding.TextMarshaler interface for %[1]s
